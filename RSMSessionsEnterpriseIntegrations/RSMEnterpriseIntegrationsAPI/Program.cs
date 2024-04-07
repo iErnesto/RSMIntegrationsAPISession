@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AdvWorksDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyLocalDBConnection"),
         opt => opt.MigrationsAssembly(typeof(AdvWorksDbContext).Assembly.FullName));
 });
 
