@@ -20,10 +20,37 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Repositories
         public async Task<IEnumerable<Product>> GetProducts()
         {
 
-               return await _context.Set<Product>()
-                .AsNoTracking()
-                .ToListAsync();
+            return await _context.Set<Product>()
+             .AsNoTracking()
+             .ToListAsync();
 
         }
+
+        public async Task<Product?> GetProductById(int id)
+        {
+            return await _context.Products
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.ProductId == id);
+        }
+
+        public async Task<int> CreateProduct(Product product)
+        {
+            await _context.AddAsync(product);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateProduct(Product product)
+        {
+            _context.Update(product);
+
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> DeleteProduct(Product product)
+        {
+            _context.Remove(product);
+            return await _context.SaveChangesAsync();
+        }
+
     }
 }

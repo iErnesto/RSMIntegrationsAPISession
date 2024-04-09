@@ -13,7 +13,7 @@ namespace RSMEnterpriseIntegrationsAPI.Domain.Models
         public int ProductId { get; set; }
         public string? Name { get; set; }
         public string? Color { get; set; }
-        public decimal? ListPrice { get; set; }
+        public decimal ListPrice { get; set; }
         public DateTime ModifiedDate { get; set; } = DateTime.Now;
     }
 }
