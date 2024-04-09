@@ -35,8 +35,7 @@
             {
                 case BadRequestException badRequestException:
                     statusCode = HttpStatusCode.BadRequest;
-                    break;
-                case NotFoundException NotFound:
+                    break;                case NotFoundException NotFound:
                     statusCode = HttpStatusCode.NotFound;
                     break;
                 default:
