@@ -79,21 +79,21 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
 
         }
 
-        public async Task<int> UpdateProduct(UpdateProductDto updateProductDto)
-        {
-            if (updateProductDto is null)
+            public async Task<int> UpdateProduct(UpdateProductDto updateProductDto)
             {
-                throw new BadRequestException("Product info is not valid.");
+                if (updateProductDto is null)
+                {
+                    throw new BadRequestException("Product info is not valid.");
+                }
+
+                var product = await ValidateProductExistence(updateProductDto.ProductID);
+
+                product.Name = string.IsNullOrWhiteSpace(updateProductDto.Name) ? null : updateProductDto.Name;
+                product.Color = string.IsNullOrWhiteSpace(updateProductDto.Color) ? null : updateProductDto.Color;
+                product.ListPrice = decimal.IsEvenInteger(updateProductDto.ListPrice) ? 0 : updateProductDto.ListPrice;
+
+                return await _productRepository.UpdateProduct(product);
             }
-
-            var product = await ValidateProductExistence(updateProductDto.ProductID);
-
-            product.Name = string.IsNullOrWhiteSpace(updateProductDto.Name) ? null : updateProductDto.Name;
-            product.Color = string.IsNullOrWhiteSpace(updateProductDto.Color) ? null : updateProductDto.Color;
-            product.ListPrice = decimal.IsEvenInteger(updateProductDto.ListPrice) ? 0 : updateProductDto.ListPrice;
-
-            return await _productRepository.UpdateProduct(product);
-        }
 
         public async Task<int> DeleteProduct(int id)
         {
