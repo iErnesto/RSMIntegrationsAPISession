@@ -15,6 +15,8 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Configurations
             builder.Property(e => e.ProductId).HasColumnName("ProductID");
             builder.Property(e => e.Name).IsRequired();
             builder.Property(e => e.ListPrice).IsRequired();
+
+      
         }
     }
 }

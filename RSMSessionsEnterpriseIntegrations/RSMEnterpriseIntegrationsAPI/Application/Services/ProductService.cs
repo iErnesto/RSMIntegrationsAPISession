@@ -1,14 +1,14 @@
+using RSMEnterpriseIntegrationsAPI.Application.DTOs;
+using RSMEnterpriseIntegrationsAPI.Application.Exceptions;
+using RSMEnterpriseIntegrationsAPI.Domain.Interfaces;
+using RSMEnterpriseIntegrationsAPI.Domain.Models;
+using System.Collections.Generic;
+using System.Formats.Asn1;
+using System.Runtime.Intrinsics.Arm;
+using System.Threading.Tasks;
+
 namespace RSMEnterpriseIntegrationsAPI.Application.Services
 {
-    using RSMEnterpriseIntegrationsAPI.Application.DTOs;
-    using RSMEnterpriseIntegrationsAPI.Application.Exceptions;
-    using RSMEnterpriseIntegrationsAPI.Domain.Interfaces;
-    using RSMEnterpriseIntegrationsAPI.Domain.Models;
-    using System.Collections.Generic;
-    using System.Formats.Asn1;
-    using System.Runtime.Intrinsics.Arm;
-    using System.Threading.Tasks;
-
     public class ProductService(IProductRepository repository) : IProductService
     {
         private readonly IProductRepository _productRepository = repository;
