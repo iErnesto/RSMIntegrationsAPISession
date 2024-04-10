@@ -8,13 +8,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository(AdvWorksDbContext context) : IDepartmentRepository
     {
-        private readonly AdvWorksDbContext _context;
-        public DepartmentRepository(AdvWorksDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AdvWorksDbContext _context = context;
 
         public async Task<int> CreateDepartment(Department department)
         {

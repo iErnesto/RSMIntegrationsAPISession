@@ -8,13 +8,9 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Repositories
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class SalesOrderHeaderRepository : ISalesOrderHeaderRepository
+    public class SalesOrderHeaderRepository(AdvWorksDbContext context) : ISalesOrderHeaderRepository
     {
-        private readonly AdvWorksDbContext _context;
-        public SalesOrderHeaderRepository(AdvWorksDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AdvWorksDbContext _context = context;
 
         public async Task<IEnumerable<SalesOrderHeader>> GetSalesOrderHeaders()
         {
