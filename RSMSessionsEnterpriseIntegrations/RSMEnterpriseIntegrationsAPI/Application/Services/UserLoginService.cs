@@ -1,19 +1,23 @@
+using Microsoft.AspNetCore.DataProtection.Repositories;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using RSMEnterpriseIntegrationsAPI.Application.DTOs;
 using RSMEnterpriseIntegrationsAPI.Application.Exceptions;
 using RSMEnterpriseIntegrationsAPI.Domain.Interfaces;
 using RSMEnterpriseIntegrationsAPI.Domain.Models;
 using System.Collections.Generic;
-using System.Formats.Asn1;
-using System.Runtime.Intrinsics.Arm;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace RSMEnterpriseIntegrationsAPI.Application.Services
 {
-    public class UserLoginService(IUserLoginRepository repository, IPasswordHasher passwordHasher) : IUserLoginService
+    public class UserLoginService(IUserLoginRepository repository, IPasswordHasher passwordHasher, IOptions<JwtSettings> jwtSettings) : IUserLoginService
     {
         private readonly IUserLoginRepository _userLoginRepository = repository;
-
         private readonly IPasswordHasher _passwordHasher = passwordHasher;
+        private readonly JwtSettings _jwtSettings = jwtSettings.Value;
 
         public async Task<IEnumerable<GetUserLoginDto>> GetAll()
         {
@@ -21,14 +25,14 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
 
             if (userLogins == null)
             {
-                return [];
+                return new List<GetUserLoginDto>();
             }
 
-            List<GetUserLoginDto> userLoginDtos = [];
+            var userLoginDtos = new List<GetUserLoginDto>();
 
             foreach (var userLogin in userLogins)
             {
-                GetUserLoginDto dto = new GetUserLoginDto
+                var dto = new GetUserLoginDto
                 {
                     Username = userLogin.Username,
                     Role = userLogin.Role,
@@ -39,6 +43,7 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
 
             return userLoginDtos;
         }
+
         public async Task<GetUserLoginDto?> GetUserLoginById(int id)
         {
             if (id <= 0)
@@ -46,10 +51,9 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
                 throw new BadRequestException("UserLoginId is not valid");
             }
 
-
             var userLogin = await ValidateUserLoginExistence(id);
 
-            GetUserLoginDto dto = new()
+            var dto = new GetUserLoginDto
             {
                 Username = userLogin.Username,
                 Role = userLogin.Role,
@@ -60,23 +64,22 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
         public async Task<int> CreateUserLogin(CreateUserLoginDto createUserLoginDto)
         {
             if (createUserLoginDto is null
-            || string.IsNullOrWhiteSpace(createUserLoginDto.Username)
-            || string.IsNullOrWhiteSpace(createUserLoginDto.Password)
-            || string.IsNullOrWhiteSpace(createUserLoginDto.Role))
+                || string.IsNullOrWhiteSpace(createUserLoginDto.Username)
+                || string.IsNullOrWhiteSpace(createUserLoginDto.Password)
+                || string.IsNullOrWhiteSpace(createUserLoginDto.Role))
             {
                 throw new BadRequestException("UserLogin info is not valid");
             }
 
             var hashedPassword = _passwordHasher.HashPassword(createUserLoginDto.Password);
 
-            UserLogin userLogin = new()
+            var userLogin = new UserLogin
             {
                 Username = createUserLoginDto.Username,
                 Password = hashedPassword,
                 Role = createUserLoginDto.Role,
             };
             return await _userLoginRepository.CreateUserLogin(userLogin);
-
         }
 
         public async Task<int> DeleteUserLogin(int id)
@@ -85,6 +88,7 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
             {
                 throw new BadRequestException($"Unable to delete UserLoginId with id {id}");
             }
+
             var userLogin = await ValidateUserLoginExistence(id);
             return await _userLoginRepository.DeleteUserLogin(userLogin);
         }
@@ -99,6 +103,24 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
 
 
 
+        private string GenerateJwtToken(int userId)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_jwtSettings.Secret);
 
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                [
+                    new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                ]),
+                Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.Expiration),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
     }
 }
+

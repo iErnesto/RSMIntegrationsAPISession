@@ -10,5 +10,8 @@ namespace RSMEnterpriseIntegrationsAPI.Domain.Interfaces
         Task<UserLogin?> GetUserLogin(int id);
         Task<int> CreateUserLogin(UserLogin userLogin);
         Task<int> DeleteUserLogin(UserLogin userLogin);
+        Task<UserLogin?> GetUserByUsername(string username);
+
+
     }
 }

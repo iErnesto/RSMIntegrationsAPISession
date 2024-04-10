@@ -21,7 +21,7 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Repositories
 
         }
 
-          public async Task<UserLogin?> GetUserLogin(int id)
+        public async Task<UserLogin?> GetUserLogin(int id)
         {
             return await _context.UserLogins
             .AsNoTracking()
@@ -40,6 +40,11 @@ namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Repositories
             _context.Remove(userLogin);
 
             return await _context.SaveChangesAsync();
+        }
+
+        public async Task<UserLogin?> GetUserByUsername(string username)
+        {
+            return await _context.UserLogins.FirstOrDefaultAsync(u => u.Username == username);
         }
 
 

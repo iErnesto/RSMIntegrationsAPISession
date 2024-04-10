@@ -37,5 +37,7 @@ namespace RSMEnterpriseIntegrationsAPI.Controllers
             return Ok(await _service.DeleteUserLogin(id));
         }
 
+    
+
     }
 }

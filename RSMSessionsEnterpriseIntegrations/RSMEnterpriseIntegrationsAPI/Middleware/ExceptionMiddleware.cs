@@ -4,16 +4,10 @@
 
     using System.Net;
     using System.Text.Json;
-    using System.Text.Json.Serialization;
 
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
-
-        public ExceptionMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
+        private readonly RequestDelegate _next = next;
 
         public async Task Invoke(HttpContext context)
         {

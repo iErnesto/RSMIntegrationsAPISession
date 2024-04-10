@@ -1,6 +1,5 @@
 namespace RSMEnterpriseIntegrationsAPI.Domain.Interfaces
 {
-    using RSMEnterpriseIntegrationsAPI.Application.DTOs;
     using RSMEnterpriseIntegrationsAPI.Domain.Models;
 
     public interface ISalesOrderHeaderRepository

@@ -1,7 +1,6 @@
 namespace RSMEnterpriseIntegrationsAPI.Infrastructure.Repositories
 {
     using Microsoft.EntityFrameworkCore;
-    using RSMEnterpriseIntegrationsAPI.Application.DTOs;
     using RSMEnterpriseIntegrationsAPI.Domain.Interfaces;
     using RSMEnterpriseIntegrationsAPI.Domain.Models;
 

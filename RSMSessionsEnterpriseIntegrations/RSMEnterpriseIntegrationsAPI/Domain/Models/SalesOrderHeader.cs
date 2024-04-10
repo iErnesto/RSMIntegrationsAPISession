@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RSMEnterpriseIntegrationsAPI.Domain.Models;
+﻿namespace RSMEnterpriseIntegrationsAPI.Domain.Models;
 
 
 public partial class SalesOrderHeader

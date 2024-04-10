@@ -9,5 +9,7 @@ namespace RSMEnterpriseIntegrationsAPI.Domain.Interfaces
         Task<GetUserLoginDto?> GetUserLoginById(int id);
         Task<int> CreateUserLogin(CreateUserLoginDto createUserLoginDto);
         Task<int> DeleteUserLogin(int id);
+     
+       
     }
 }
