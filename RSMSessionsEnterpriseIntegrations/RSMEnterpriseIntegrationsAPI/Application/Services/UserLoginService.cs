@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 
 namespace RSMEnterpriseIntegrationsAPI.Application.Services
 {
-    public class UserLoginService(IUserLoginRepository repository) : IUserLoginService
+    public class UserLoginService(IUserLoginRepository repository, IPasswordHasher passwordHasher) : IUserLoginService
     {
         private readonly IUserLoginRepository _userLoginRepository = repository;
+
+        private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
         public async Task<IEnumerable<GetUserLoginDto>> GetAll()
         {
@@ -44,6 +46,7 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
                 throw new BadRequestException("UserLoginId is not valid");
             }
 
+
             var userLogin = await ValidateUserLoginExistence(id);
 
             GetUserLoginDto dto = new()
@@ -64,10 +67,12 @@ namespace RSMEnterpriseIntegrationsAPI.Application.Services
                 throw new BadRequestException("UserLogin info is not valid");
             }
 
+            var hashedPassword = _passwordHasher.HashPassword(createUserLoginDto.Password);
+
             UserLogin userLogin = new()
             {
                 Username = createUserLoginDto.Username,
-                Password = createUserLoginDto.Password,
+                Password = hashedPassword,
                 Role = createUserLoginDto.Role,
             };
             return await _userLoginRepository.CreateUserLogin(userLogin);

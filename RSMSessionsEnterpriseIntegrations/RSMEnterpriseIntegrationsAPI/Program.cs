@@ -31,6 +31,7 @@ builder.Services.AddTransient<ISalesOrderHeaderRepository, SalesOrderHeaderRepos
 builder.Services.AddTransient<ISalesOrderHeaderService, SalesOrderHeaderService>();
 builder.Services.AddTransient<IUserLoginRepository, UserLoginRepository>();
 builder.Services.AddTransient<IUserLoginService, UserLoginService>();
+builder.Services.AddTransient<IPasswordHasher,  BCryptPasswordHasher>();
 
 var app = builder.Build();
 
